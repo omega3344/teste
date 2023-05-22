@@ -5,18 +5,18 @@ from datetime import date
 import smtplib, ssl
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from dotenv import load_dotenv
+#from dotenv import load_dotenv
 
 
 #Load environment variables
-load_dotenv()
+#load_dotenv()
 try:
-    ENV_PASSWORD = os.getenv('PASSWORD')
-    ENV_FROM = os.getenv('FROM')
-    ENV_TO = os.getenv('TO')
-    #ENV_FROM = os.environ['FROM']
-    #ENV_PASSWORD = os.environ['PASSWORD']
-    #ENV_TO = os.environ['TO']
+    #ENV_PASSWORD = os.getenv('PASSWORD')
+    #ENV_FROM = os.getenv('FROM')
+    #ENV_TO = os.getenv('TO')
+    ENV_FROM = os.environ['FROM']
+    ENV_PASSWORD = os.environ['PASSWORD']
+    ENV_TO = os.environ['TO']
 except KeyError:
     raise KeyError('Token not available!')
 
@@ -70,15 +70,16 @@ def send_email(price, msg, total):
 
 #main
 
-URL = 'http://datahub.ren.pt/pt/eletricidade/mercado/'
+URL = 'https://www.jfazurem.pt/'
 page_text = requests.get(URL).text
 soup = BeautifulSoup(page_text, 'lxml')
-data = soup.find_all('span', class_='center-cell')
-price = float(data[4].text)
+data = soup.find('div', id='rodape')
+price = data.text
 
-if price > 200:
-    msg = 'ATENÇÃO! Preço médio acima de 200€/MWh! - '
-else:
-    msg = 'Preço médio do MWh - '
+print(price)
+
+msg = 'Preço médio do MWh - '
+
+price = 88
 
 send_email(price, msg, calc_total(price))
