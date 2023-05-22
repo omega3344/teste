@@ -76,8 +76,6 @@ soup = BeautifulSoup(page_text, 'lxml')
 data = soup.find('div', id='rodape')
 price = data.text
 
-print(price)
-
 msg = 'Preço médio do MWh - '
 
 price = 88
